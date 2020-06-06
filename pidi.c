@@ -30,6 +30,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
  //-----------------------------------------------------------------
 
 
@@ -37,11 +38,11 @@
 
 #include "pidi.h"
 
-
+/* Build for LinuxCNC
 #if !defined(BUILD_SYS_USER_DSO)
 #error "This driver is for usermode threads only"
 #endif
-
+*/
 
 MODULE_AUTHOR("DIAMS");
 MODULE_DESCRIPTION("Driver for PiDiCNC boards");
@@ -2240,6 +2241,7 @@ platform_t check_platform(void)
         return (RPI_3);
     else
         return(UNSUPPORTED);
+
 }
 
 
@@ -2261,7 +2263,8 @@ int map_gpio()
         break;
     }
 
-    fd = open("/dev/mem", O_RDWR | O_SYNC);
+    //fd = open("/dev/mem", O_RDWR | O_SYNC);
+    fd = open("/dev/gpiomem", O_RDWR | O_SYNC);
     if (fd < 0)
     {
         rtapi_print_msg(RTAPI_MSG_ERR, "%s: can't open /dev/mem \n", modname);
