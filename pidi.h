@@ -18,6 +18,10 @@
 #ifndef _PIDICNC_H_
 #define _PIDICNC_H_
 
+typedef unsigned int u32;
+typedef unsigned short u16;
+typedef unsigned char u8;
+
 enum pin_input_names {
     HOME_X,
     HOME_Y,
@@ -82,7 +86,8 @@ typedef enum {
 
 #define BCM2835_SPICLKDIV   32      /* ~8 Mhz */
 
-#define BCM2835_PERI_BASE   0x20000000
+//#define BCM2835_PERI_BASE   0x20000000
+#define BCM2835_PERI_BASE   0xFE000000
 #define BCM2709_OFFSET      0x1F000000
 #define BCM2835_GPIO_BASE   (BCM2835_PERI_BASE + 0x200000) /* GPIO controller */
 #define BCM2835_SPI_BASE    (BCM2835_PERI_BASE + 0x204000) /* SPI controller */
