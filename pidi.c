@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h> 
 
 
  //-----------------------------------------------------------------
@@ -1668,8 +1669,8 @@ void HwComm(void *arg, long period)
         }
         for (jj = 0; jj < 5; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 
@@ -2153,8 +2154,8 @@ void HwConfigure()
         }
         for (jj = 0; jj < 5; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 }
@@ -2371,8 +2372,8 @@ int CheckIdBoars()	//1=OK, 0,-1,-2,-3,...=Chyba na 0.,1.,2.,3.-tej doske
         }
         for (jj = 0; jj < 5; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 
@@ -2423,8 +2424,8 @@ int CheckIdBoars()	//1=OK, 0,-1,-2,-3,...=Chyba na 0.,1.,2.,3.-tej doske
     {
         for (jj = 5; jj < 10; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj - 5].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj - 5].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj - 5].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj - 5].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 
@@ -2569,14 +2570,14 @@ void bcm2835_spi_setClockDivider(u16 divider)
 
 void bcm2835_spi_chipSelect(u8 cs)
 {
-    volatile    u32* paddr = (u32 *)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
+    volatile    u32* paddr = (u32 *)(uintptr_t)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
         /* Mask in the CS bits of CS */
     bcm2835_peri_set_bits(paddr, cs, BCM2835_SPI0_CS_CS);
 }
 
 void bcm2835_spi_setChipSelectPolarity(u8 cs, u8 active)
 {
-    volatile    u32* paddr = (u32 *)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
+    volatile    u32* paddr = (u32 *)(uintptr_t)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
     u8      shift = 21 + cs;
     /* Mask in the appropriate CSPOLn bit */
     bcm2835_peri_set_bits(paddr, active << shift, 1 << shift);
