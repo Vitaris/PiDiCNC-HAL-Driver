@@ -2283,11 +2283,10 @@ int map_gpio()
         return(-1);
     }
 
-    //fd = open("/dev/mem", O_RDWR | O_SYNC);
     fd = open("/dev/gpiomem", O_RDWR | O_SYNC);
     if (fd < 0)
     {
-        rtapi_print_msg(RTAPI_MSG_ERR, "%s: can't open /dev/mem \n", modname);
+        rtapi_print_msg(RTAPI_MSG_ERR, "%s: can't open /dev/gpiomem \n", modname);
         return(-1);
     }
 
