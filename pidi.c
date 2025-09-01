@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h> 
 
 
  //-----------------------------------------------------------------
@@ -47,7 +48,6 @@
 MODULE_AUTHOR("DIAMS");
 MODULE_DESCRIPTION("Driver for PiDiCNC boards");
 MODULE_LICENSE("GPL v2");
-
 
 //-----------------------------------------------------------------------------
 
@@ -587,11 +587,22 @@ int rtapi_app_main(char *argv)
     case RPI:
     case RPI_2:
     case RPI_3:
-        // read_buf = rpi_read_buf;
-        // write_buf = rpi_write_buf;
         setup_gpio = rpi_setup_gpio;
         restore_gpio = rpi_restore_gpio;
         break;
+    case RPI_4:
+        setup_gpio = rpi_setup_gpio;
+        restore_gpio = rpi_restore_gpio;
+        break;
+    case RPI_5:
+        setup_gpio = rpi_setup_gpio;
+        restore_gpio = rpi_restore_gpio;
+        break;
+    case UNSUPPORTED:
+        rtapi_print_msg(RTAPI_MSG_ERR,
+            "%s: ERROR: Unsupported platform detected.\n",
+            modname);
+        return(-1);
     default:
         rtapi_print_msg(RTAPI_MSG_ERR,
             "%s: ERROR: This driver is not for this platform.\n",
@@ -1668,8 +1679,8 @@ void HwComm(void *arg, long period)
         }
         for (jj = 0; jj < 5; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 
@@ -2153,8 +2164,8 @@ void HwConfigure()
         }
         for (jj = 0; jj < 5; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 }
@@ -2214,9 +2225,6 @@ void Set3805EncPosition(S_HAL_3805	*pHal_3805, S_SPI_IN_3805 *p_SPI_IN_3805, int
     pHal_3805->enc_FirstPos[encid] = p_SPI_IN_3805->IRCposition[encid] - uspos;
 }
 
-
-
-
 platform_t check_platform(void)
 {
     FILE        *fp;
@@ -2228,7 +2236,7 @@ platform_t check_platform(void)
     fclose(fp);
 
     if (fsize == 0 || fsize == sizeof(buf))
-        return(0);
+        return(UNSUPPORTED);
 
     /* NUL terminate the buffer */
     buf[fsize] = '\0';
@@ -2237,13 +2245,15 @@ platform_t check_platform(void)
         return (RPI);
     else if (NULL != strstr(buf, "BCM2709"))
         return (RPI_2);
-    else if (NULL != strstr(buf, "BCM2835"))
+    else if (NULL != strstr(buf, "BCM2835") || NULL != strstr(buf, "BCM2836") || NULL != strstr(buf, "BCM2837"))
         return (RPI_3);
+    else if (NULL != strstr(buf, "BCM2711") || NULL != strstr(buf, "Raspberry Pi 4"))
+        return (RPI_4);
+    else if (NULL != strstr(buf, "BCM2712") || NULL != strstr(buf, "Raspberry Pi 5"))
+        return (RPI_5);
     else
         return(UNSUPPORTED);
-
 }
-
 
 int map_gpio()
 {
@@ -2253,14 +2263,24 @@ int map_gpio()
     switch (platform)
     {
     case RPI:
-        mem1_base = BCM2835_GPIO_BASE;
-        mem2_base = BCM2835_SPI_BASE;
+        mem1_base = BCM2835_PERI_BASE_PI1 + BCM2835_GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE_PI1 + BCM2835_SPI_OFFSET;
         break;
     case RPI_2:
     case RPI_3:
-        mem1_base = BCM2835_GPIO_BASE + BCM2709_OFFSET;
-        mem2_base = BCM2835_SPI_BASE + BCM2709_OFFSET;
+        mem1_base = BCM2835_PERI_BASE_PI23 + BCM2835_GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE_PI23 + BCM2835_SPI_OFFSET;
         break;
+    case RPI_4:
+        mem1_base = BCM2835_PERI_BASE_PI4 + BCM2835_GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE_PI4 + BCM2835_SPI_OFFSET;
+        break;
+    case RPI_5:
+        mem1_base = BCM2835_PERI_BASE_PI5 + BCM2835_GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE_PI5 + BCM2835_SPI_OFFSET;
+        break;
+    default:
+        return(-1);
     }
 
     //fd = open("/dev/mem", O_RDWR | O_SYNC);
@@ -2371,8 +2391,8 @@ int CheckIdBoars()	//1=OK, 0,-1,-2,-3,...=Chyba na 0.,1.,2.,3.-tej doske
         }
         for (jj = 0; jj < 5; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 
@@ -2423,8 +2443,8 @@ int CheckIdBoars()	//1=OK, 0,-1,-2,-3,...=Chyba na 0.,1.,2.,3.-tej doske
     {
         for (jj = 5; jj < 10; jj++)
         {
-            *Globals->x_debug[jj * 2 + 0] = (int)Boards[jj - 5].SpiWrPointer - (int)txBuf;
-            *Globals->x_debug[jj * 2 + 1] = (int)Boards[jj - 5].SpiRdPointer - (int)rxBuf;
+            *Globals->x_debug[jj * 2 + 0] = (intptr_t)Boards[jj - 5].SpiWrPointer - (intptr_t)txBuf;
+            *Globals->x_debug[jj * 2 + 1] = (intptr_t)Boards[jj - 5].SpiRdPointer - (intptr_t)rxBuf;
         }
     }
 
@@ -2569,14 +2589,14 @@ void bcm2835_spi_setClockDivider(u16 divider)
 
 void bcm2835_spi_chipSelect(u8 cs)
 {
-    volatile    u32* paddr = (u32 *)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
+    volatile    u32* paddr = (u32 *)(uintptr_t)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
         /* Mask in the CS bits of CS */
     bcm2835_peri_set_bits(paddr, cs, BCM2835_SPI0_CS_CS);
 }
 
 void bcm2835_spi_setChipSelectPolarity(u8 cs, u8 active)
 {
-    volatile    u32* paddr = (u32 *)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
+    volatile    u32* paddr = (u32 *)(uintptr_t)BCM2835_SPICS;      //bcm2835_spi0 + BCM2835_SPI0_CS/4;
     u8      shift = 21 + cs;
     /* Mask in the appropriate CSPOLn bit */
     bcm2835_peri_set_bits(paddr, active << shift, 1 << shift);
