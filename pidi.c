@@ -529,8 +529,7 @@ int rtapi_app_main(char *argv)
     int	        allmode, mode, motor;
 
 
-    rtapi_set_msg_level(RTAPI_MSG_ALL);
-    rtapi_set_msg_level(7);
+    rtapi_set_msg_level(RTAPI_MSG_INFO);
 
     /*
     ii = rtapi_get_msg_level();
@@ -571,7 +570,7 @@ int rtapi_app_main(char *argv)
     BoardParam[14] = Board14;
     BoardParam[15] = Board15;
 
-    rtapi_print_msg(RTAPI_MSG_ERR, "Boards=%d,%d,%d,%d", BoardParam[0][DEF_BOARD_TYPE], BoardParam[1][DEF_BOARD_TYPE], BoardParam[2][DEF_BOARD_TYPE], BoardParam[3][DEF_BOARD_TYPE]);
+    rtapi_print_msg(RTAPI_MSG_DBG, "Boards=%d,%d,%d,%d", BoardParam[0][DEF_BOARD_TYPE], BoardParam[1][DEF_BOARD_TYPE], BoardParam[2][DEF_BOARD_TYPE], BoardParam[3][DEF_BOARD_TYPE]);
 
     MakeConfigure = 1;
 
