@@ -2296,24 +2296,27 @@ int map_gpio()
     switch (platform)
     {
     case RPI:
-        mem1_base = BCM2835_GPIO_BASE;
-        mem2_base = BCM2835_SPI_BASE;
+        mem1_base = BCM2835_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_2:
+        mem1_base = BCM2836_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2836_PERI_BASE + SPI_OFFSET;
     case RPI_3:
-         // mem1_base = BCM2835_GPIO_BASE + BCM2709_OFFSET;
-         // mem2_base = BCM2835_SPI_BASE + BCM2709_OFFSET;
-         mem1_base = BCM2835_GPIO_BASE;
-         mem2_base = BCM2835_SPI_BASE;
+         mem1_base = BCM2837_PERI_BASE + GPIO_OFFSET;
+         mem2_base = BCM2837_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_4:
-        mem1_base = BCM2835_GPIO_BASE + BCM2709_OFFSET;
-        mem2_base = BCM2835_SPI_BASE + BCM2709_OFFSET;
+        mem1_base = BCM2711_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2711_PERI_BASE + SPI_OFFSET;
         break;
+    case RPI_5:
+        mem1_base = BCM2712_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2712_PERI_BASE + SPI_OFFSET;
+        break;  
     }
 
     fd = rtapi_open_as_root("/dev/mem", O_RDWR | O_SYNC);
-    //fd = open("/dev/gpiomem", O_RDWR | O_SYNC);
     if (fd < 0)
     {
         rtapi_print_msg(RTAPI_MSG_ERR, "%s: can't open /dev/mem \n", modname);
