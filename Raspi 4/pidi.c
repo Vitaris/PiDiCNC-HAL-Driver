@@ -2232,31 +2232,59 @@ platform_t check_platform(void)
     size_t      fsize;
 
     fp = fopen("/proc/cpuinfo", "r");
+    if (fp == NULL) {
+        rtapi_print_msg(RTAPI_MSG_ERR, "%s: ERROR: cannot open /proc/cpuinfo\n", modname);
+        return(UNSUPPORTED);
+    }
+    
     fsize = fread(buf, 1, sizeof(buf), fp);
     fclose(fp);
 
     if (fsize == 0 || fsize == sizeof(buf))
-        return(0);
+        return(UNSUPPORTED);
 
     /* NUL terminate the buffer */
     buf[fsize] = '\0';
 
-    if (NULL != strstr(buf, "BCM2708"))
-        return (RPI);
-    else if (NULL != strstr(buf, "BCM2709"))
-        return (RPI_2);
-    else if (NULL != strstr(buf, "BCM2835"))
-        return (RPI_3);
-    else if (NULL != strstr(buf, "Raspberry Pi 4"))
-    {
-        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Raspberry Pi 4 found!\n", modname);
+    /* Check for specific model information */
+    if (NULL != strstr(buf, "Raspberry Pi 5")) {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Raspberry Pi 5 detected\n", modname);
+        return (RPI_5);
+    }
+    else if (NULL != strstr(buf, "Raspberry Pi 4")) {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Raspberry Pi 4 detected\n", modname);
         return (RPI_4);
-    } 
-
-        
-    else
-        return(UNSUPPORTED);
-
+    }
+    
+    /* Check for processor types */
+    if (NULL != strstr(buf, "BCM2711")) {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: BCM2711 processor (Pi 4) detected\n", modname);
+        return (RPI_4);
+    }
+    else if (NULL != strstr(buf, "BCM2710")) {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: BCM2710 processor (Pi 3) detected\n", modname);
+        return (RPI_3);
+    }
+    else if (NULL != strstr(buf, "BCM2709")) {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: BCM2709 processor (Pi 2) detected\n", modname);
+        return (RPI_2);
+    }
+    else if (NULL != strstr(buf, "BCM2708")) {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: BCM2708 processor (Pi 1) detected\n", modname);
+        return (RPI);
+    }
+    else if (NULL != strstr(buf, "BCM2835")) {
+        /* Could be Pi Zero or Pi 1 */
+        if (NULL != strstr(buf, "Pi Zero")) {
+            rtapi_print_msg(RTAPI_MSG_INFO, "%s: Raspberry Pi Zero detected\n", modname);
+            return (RPI_3); /* Use RPI_3 for Pi Zero */
+        }
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: BCM2835 processor detected\n", modname);
+        return (RPI_3); /* Default to RPI_3 settings for BCM2835 */
+    }
+    
+    rtapi_print_msg(RTAPI_MSG_ERR, "%s: ERROR: Unknown Raspberry Pi model\n", modname);
+    return(UNSUPPORTED);
 }
 
 
