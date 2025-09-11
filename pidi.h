@@ -38,12 +38,13 @@ enum pin_output_names {
 };
 
 typedef enum {
-    RPI = 1,
-    RPI_2,
-    RPI_3,
-    RPI_4,
-    RPI_5,
-    UNSUPPORTED
+    UNSUPPORTED = 0,
+    RPI,        /* Raspberry Pi 1 */
+    RPI_ZERO,   /* Raspberry Pi Zero and Zero W */
+    RPI_2,      /* Raspberry Pi 2 */
+    RPI_3,      /* Raspberry Pi 3 and Compute Module 3 */
+    RPI_4,      /* Raspberry Pi 4 and Compute Module 4 */
+    RPI_5       /* Raspberry Pi 5 */
 } platform_t;
 
 
@@ -76,7 +77,8 @@ typedef enum {
 
 
 #define PAGE_SIZE       (4*1024)
-#define BLOCK_SIZE      (4*1024)
+// #define BLOCK_SIZE      (4*1024)
+#define BLOCK_SIZE      0x01800000
 
 #define CMD_CFG         0x4746433E  // >CFG
 #define CMD_TST         0x5453543E  // >TST
@@ -88,16 +90,14 @@ typedef enum {
 
 #define BCM2835_SPICLKDIV   32      /* ~8 Mhz */
 
-#define BCM2835_PERI_BASE_PI1   0x20000000
-#define BCM2835_PERI_BASE_PI23  0x3F000000  
-#define BCM2835_PERI_BASE_PI4   0xFE000000
-#define BCM2835_PERI_BASE_PI5   0x107000000
+#define BCM2835_PERI_BASE   0x20000000
+#define BCM2836_PERI_BASE   0x3F000000
+#define BCM2837_PERI_BASE   0x3F000000
+#define BCM2711_PERI_BASE   0xFE000000
+#define BCM2712_PERI_BASE   0xFE000000
 
-#define BCM2835_GPIO_OFFSET     0x200000
-#define BCM2835_SPI_OFFSET      0x204000
-
-#define BCM2835_GPIO_BASE   (BCM2835_PERI_BASE + BCM2835_GPIO_OFFSET) /* GPIO controller */
-#define BCM2835_SPI_BASE    (BCM2835_PERI_BASE + BCM2835_SPI_OFFSET) /* SPI controller */
+#define GPIO_OFFSET         0x200000 /* GPIO controller */
+#define SPI_OFFSET          0x204000 /* SPI controller */
 
 #define BCM2835_GPFSEL0     *(mem1)
 #define BCM2835_GPFSEL1     *(mem1 + 1)

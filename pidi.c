@@ -2248,15 +2248,30 @@ platform_t check_platform(void)
     buf[fsize] = '\0';
 
     if (NULL != strstr(buf, "BCM2708"))
+    {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 1 (BCM2708)\n", modname);
         return (RPI);
+    }
     else if (NULL != strstr(buf, "BCM2709"))
+    {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 2 (BCM2709)\n", modname);
         return (RPI_2);
+    }
     else if (NULL != strstr(buf, "BCM2835") || NULL != strstr(buf, "BCM2836") || NULL != strstr(buf, "BCM2837"))
+    {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 3 (BCM2837)\n", modname);
         return (RPI_3);
+    }
     else if (NULL != strstr(buf, "BCM2711") || NULL != strstr(buf, "Raspberry Pi 4"))
+    {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 4 (BCM2711)\n", modname);
         return (RPI_4);
+    }
     else if (NULL != strstr(buf, "BCM2712") || NULL != strstr(buf, "Raspberry Pi 5"))
+    {
+        rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 5 (BCM2712)\n", modname);
         return (RPI_5);
+    }
     else
         return(UNSUPPORTED);
 }
@@ -2269,27 +2284,29 @@ int map_gpio()
     switch (platform)
     {
     case RPI:
-        mem1_base = BCM2835_PERI_BASE_PI1 + BCM2835_GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI1 + BCM2835_SPI_OFFSET;
+        mem1_base = BCM2835_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_2:
+        mem1_base = BCM2836_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2836_PERI_BASE + SPI_OFFSET;
     case RPI_3:
-        mem1_base = BCM2835_PERI_BASE_PI23 + BCM2835_GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI23 + BCM2835_SPI_OFFSET;
+        mem1_base = BCM2837_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2837_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_4:
-        mem1_base = BCM2835_PERI_BASE_PI4 + BCM2835_GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI4 + BCM2835_SPI_OFFSET;
+        mem1_base = BCM2711_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2711_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_5:
-        mem1_base = BCM2835_PERI_BASE_PI5 + BCM2835_GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI5 + BCM2835_SPI_OFFSET;
+        mem1_base = BCM2712_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2712_PERI_BASE + SPI_OFFSET;
         break;
     default:
         return(-1);
     }
 
-    fd = open("/dev/gpiomem", O_RDWR | O_SYNC);
+    fd = rtapi_open_as_root("/dev/mem", O_RDWR | O_SYNC);
     if (fd < 0)
     {
         rtapi_print_msg(RTAPI_MSG_ERR, "%s: can't open /dev/gpiomem \n", modname);
