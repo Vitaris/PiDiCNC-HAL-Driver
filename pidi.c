@@ -2263,23 +2263,23 @@ int map_gpio()
     switch (platform)
     {
     case RPI:
-        mem1_base = BCM2835_PERI_BASE_PI1 + GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI1 + SPI_OFFSET;
+        mem1_base = BCM2835_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2835_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_2:
-        mem1_base = BCM2835_PERI_BASE_PI2 + GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI2 + SPI_OFFSET;
+        mem1_base = BCM2836_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2836_PERI_BASE + SPI_OFFSET;
     case RPI_3:
-        mem1_base = BCM2835_PERI_BASE_PI3 + GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI3 + SPI_OFFSET;
+        mem1_base = BCM2837_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2837_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_4:
-        mem1_base = BCM2835_PERI_BASE_PI4 + GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI4 + SPI_OFFSET;
+        mem1_base = BCM2711_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2711_PERI_BASE + SPI_OFFSET;
         break;
     case RPI_5:
-        mem1_base = BCM2835_PERI_BASE_PI5 + GPIO_OFFSET;
-        mem2_base = BCM2835_PERI_BASE_PI5 + SPI_OFFSET;
+        mem1_base = BCM2712_PERI_BASE + GPIO_OFFSET;
+        mem2_base = BCM2712_PERI_BASE + SPI_OFFSET;
         break;
     default:
         return(-1);
