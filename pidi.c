@@ -2242,20 +2242,30 @@ platform_t check_platform(void)
     buf[fsize] = '\0';
 
     if (NULL != strstr(buf, "BCM2708"))
+    {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 1 (BCM2708)\n", modname);
         return (RPI);
+    }
     else if (NULL != strstr(buf, "BCM2709"))
+    {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 2 (BCM2709)\n", modname);
         return (RPI_2);
+    }
     else if (NULL != strstr(buf, "BCM2835") || NULL != strstr(buf, "BCM2836") || NULL != strstr(buf, "BCM2837"))
+    {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 3 (BCM2837)\n", modname);
         return (RPI_3);
+    }
     else if (NULL != strstr(buf, "BCM2711") || NULL != strstr(buf, "Raspberry Pi 4"))
+    {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 4 (BCM2711)\n", modname);
         return (RPI_4);
+    }
     else if (NULL != strstr(buf, "BCM2712") || NULL != strstr(buf, "Raspberry Pi 5"))
+    {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 5 (BCM2712)\n", modname);
         return (RPI_5);
+    }
     else
         return(UNSUPPORTED);
 }
