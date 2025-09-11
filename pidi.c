@@ -1102,7 +1102,6 @@ int rtapi_app_main(char *argv)
                 *(pHal_3805->bout_led[jj]) = 0;
             }
         }
-        rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 1");
         break;
 
         case 3809:
@@ -1303,13 +1302,9 @@ int rtapi_app_main(char *argv)
     }
 
 
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 2");
-    // Tu sa to dostane
     SetFirstBoard();
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 3");
 
     jj = CheckIdBoars();    //1=OK, 0,-1,-2,-3,...=Chyba na 0.,1.,2.,3.-tej doske
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 4");
 //  jj = 1;
     if (jj != 1)
     {
@@ -2196,12 +2191,10 @@ void write_read_buf(char* tbuf, char* rbuf, int len)
         /* Rx fifo not empty, so get the next received byte */
         if (BCM2835_SPICS & BCM2835_SPI0_CS_RXD)
             rbuf[rxcnt++] = BCM2835_SPIFIFO;
-        rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 2-1-1");
     }
 
     /* Wait for DONE to be set */
     while (!(BCM2835_SPICS & BCM2835_SPI0_CS_DONE));
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 2-1-2");
 
     /* Set TA = 0, and also set the barrier */
     BCM2835_SPICS &= ~BCM2835_SPI0_CS_TA;
@@ -2491,13 +2484,8 @@ void SetFirstBoard()
 
     len = 10;
     memset(txBuf, BOARDS_INFO_NOTHING, len);
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 2-1");
-
     txBuf[0] = BOARDS_INFO_FIRST;
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 2-2");
-
     write_read_buf(txBuf, rxBuf, len);
-    rtapi_print_msg(RTAPI_MSG_INFO, "Sem sme sa dostali, 2-3");
 }
 
 
