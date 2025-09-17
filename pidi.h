@@ -77,8 +77,7 @@ typedef enum {
 
 
 #define PAGE_SIZE       (4*1024)
-// #define BLOCK_SIZE      (4*1024)
-#define BLOCK_SIZE      0x01800000
+#define BLOCK_SIZE      (4*1024)
 
 #define CMD_CFG         0x4746433E  // >CFG
 #define CMD_TST         0x5453543E  // >TST
