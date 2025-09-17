@@ -1361,7 +1361,7 @@ error:
 
     memset(txBuf, 0, BUFSIZE);
 
-    rtapi_print_msg(RTAPI_MSG_INFO, "%s: installed driver\n", modname);
+    rtapi_print_msg(RTAPI_MSG_INFO, "%s: Driver installed\n", modname);
     hal_ready(comp_id);
     return(0);
 }
