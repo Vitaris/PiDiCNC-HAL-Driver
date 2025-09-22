@@ -767,7 +767,7 @@ int rtapi_app_main(char *argv)
 
     //  bcm2835_spi_setDataMode( BCM2835_SPI_MODE3 );
     bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);
-    bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_FREQUENCY_15_62MHz);
+    bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_FREQUENCY_7_81MHz);
     /*
     bcm2835_spi_setDataMode( BCM2835_SPI_MODE0 );
     bcm2835_spi_setClockDivider( BCM2835_SPI_CLOCK_FREQUENCY_15_62MHz );
