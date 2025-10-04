@@ -34,15 +34,18 @@ The driver automatically detects and configures three types of PiDiCNC boards:
 
 ## Platform Support
 
-Compatible with Raspberry Pi generations 1-5 (BCM2708-2712) using direct memory-mapped SPI access for optimal performance.
+Compatible with Raspberry Pi generations 1-4 (tested on 3b+, 4) using direct memory-mapped SPI access for optimal performance.
 
 ## Safety Features
 
 Global emergency stop functionality gates all motion and analog outputs, with automatic reconfiguration when safety conditions change.
 
 ## Installation
-*todo*
 
+Copy the compiled pidi.so file to the LinuxCNC modules directory. The pidi.so file is located in the Releases section.
+```
+cp pidi.so /usr/lib/linuxcnc/modules/
+```
 ## License
 
 GNU GPL v2 (see source file headers for full details)
