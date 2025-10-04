@@ -2262,7 +2262,7 @@ platform_t check_platform(void)
     else if (NULL != strstr(buf, "BCM2712") || NULL != strstr(buf, "Raspberry Pi 5"))
     {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 5 (BCM2712)\n", modname);
-        return (RPI_5);
+        return (UNSUPPORTED);
     }
     else
         return(UNSUPPORTED);
