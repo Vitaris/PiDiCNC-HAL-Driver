@@ -2249,7 +2249,7 @@ platform_t check_platform(void)
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 2 (BCM2709)\n", modname);
         return (RPI_2);
     }
-    else if (NULL != strstr(buf, "Raspberry Pi 3 Model B Plus") || NULL != strstr(buf, "BCM2837"))
+    else if (NULL != strstr(buf, "Raspberry Pi 3 Model B"))
     {
         rtapi_print_msg(RTAPI_MSG_INFO, "%s: Detected Raspberry Pi 3 (BCM2837)\n", modname);
         return (RPI_3);
