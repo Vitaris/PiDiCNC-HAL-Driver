@@ -44,7 +44,7 @@ Global emergency stop functionality gates all motion and analog outputs, with au
 
 Copy the compiled pidi.so file to the LinuxCNC modules directory. The pidi.so file is located in the Releases section.
 ```
-cp pidi.so /usr/lib/linuxcnc/modules/
+sudo cp pidi.so /usr/lib/linuxcnc/modules/
 ```
 ## License
 
